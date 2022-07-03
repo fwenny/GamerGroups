@@ -6,12 +6,12 @@ public class User {
     private String email;
     private String displayName;
     private String iconURL;
-    private ArrayList<String> groups;
+    private ArrayList<Integer> groups;
 
     public User() {
     }
 
-    public User(String email, String displayName, String iconURL, ArrayList<String> groups) {
+    public User(String email, String displayName, String iconURL, ArrayList<Integer> groups) {
         this.email = email;
         this.displayName = displayName;
         this.iconURL = iconURL;
@@ -27,11 +27,11 @@ public class User {
         return this;
     }
 
-    public ArrayList<String> getGroups() {
+    public ArrayList<Integer> getGroups() {
         return groups;
     }
 
-    public User setGroups(ArrayList<String> groups) {
+    public User setGroups(ArrayList<Integer> groups) {
         this.groups = groups;
         return this;
     }

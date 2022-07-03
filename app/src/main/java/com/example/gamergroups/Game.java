@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Game {
     private String gameName;
-    private ArrayList<String> gameGroups;
+    private ArrayList<Group> gameGroups;
     private String icon;
 
     public Game() {
     }
 
-    public Game(String gameName, ArrayList<String> gameGroups, String icon) {
+    public Game(String gameName, ArrayList<Group> gameGroups, String icon) {
         this.gameName = gameName;
         this.gameGroups = gameGroups;
         this.icon = icon;
@@ -25,11 +25,11 @@ public class Game {
         return this;
     }
 
-    public ArrayList<String> getGameGroups() {
+    public ArrayList<Group> getGameGroups() {
         return gameGroups;
     }
 
-    public Game setGameGroups(ArrayList<String> gameGroups) {
+    public Game setGameGroups(ArrayList<Group> gameGroups) {
         this.gameGroups = gameGroups;
         return this;
     }

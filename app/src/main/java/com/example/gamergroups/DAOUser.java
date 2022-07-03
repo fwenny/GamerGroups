@@ -9,6 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DAOUser {
     private DatabaseReference dbRef;
+    public User CurrentUser;
 
     public DAOUser() {
         dbRef = FirebaseDatabase.getInstance("https://gamergroupsproject-default-rtdb.europe-west1.firebasedatabase.app").getReference(User.class.getSimpleName());

@@ -63,22 +63,12 @@ public class DAOGame {
         });
     }
 
-    public void getGameData(String key) {
-        Query queryToGetData = dbRef.child(key);
+    public Game getGameData(String key) {
+        for (Game currGame : games) {
+            if (currGame.getGameName().equals(key))
+                return currGame;
+        }
 
-        queryToGetData.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Game g = (dataSnapshot.getValue(Game.class));
-                    games.add(g);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        return null;
     }
 }

@@ -62,41 +62,12 @@
         android:inputType="textPassword"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/tv_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Icon:"
-        android:textSize="20sp"
-        android:layout_below="@+id/et_password"
-        />
-
-    <EditText
-        android:id="@+id/et_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textSize="20sp"
-        android:layout_toRightOf="@+id/tv_displayName"
-        android:layout_below="@+id/et_password"
-        />
-
     <Button
         android:id="@+id/btn_signUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Sign Up"
-        android:layout_below="@+id/et_icon"
-        android:layout_centerInParent="true"/>
-
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="back"
-        android:layout_below="@+id/btn_signUp"
+        android:layout_below="@+id/et_password"
         android:layout_centerInParent="true"/>
 </RelativeLayout>

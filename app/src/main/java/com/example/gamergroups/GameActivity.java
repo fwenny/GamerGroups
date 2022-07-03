@@ -1,6 +1,5 @@
 package com.example.gamergroups;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -61,9 +59,10 @@ public class GameActivity extends AppCompatActivity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Group grp = new Group("New group", "Group description", title.getText().toString(), 1, new ArrayList<String>() {{
-                    add(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-                }});
+                Group grp = new Group("New group", "Group description", title.getText().toString(), 1,
+                        new ArrayList<User>() {{
+                            add(DAOManager.daoUser.CurrentUser);
+                        }});
 
                 saveGroupToDB(grp);
                 adapter.addNew(grp);
@@ -72,8 +71,8 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
-    private void saveGroupToDB(String groupName, String groupDescription, String gameName, int numberOfUsers, ArrayList<String> usersInGroup) {
-        Group grp = new Group(groupName, groupDescription, gameName, numberOfUsers, usersInGroup);
+    private void saveGroupToDB(String groupName, String groupDescription, String game, int numberOfUsers, ArrayList<User> usersInGroup) {
+        Group grp = new Group(groupName, groupDescription, game, numberOfUsers, usersInGroup);
         saveGroupToDB(grp);
     }
 

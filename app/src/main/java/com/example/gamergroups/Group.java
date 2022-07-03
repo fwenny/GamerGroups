@@ -7,12 +7,12 @@ public class Group {
     private String groupDescription;
     private String game;
     private int numberOfUsers;
-    private ArrayList<String> usersInGroup;
+    private ArrayList<User> usersInGroup;
 
     public Group() {
     }
 
-    public Group(String groupName, String groupDescription, String game, int numberOfUsers, ArrayList<String> usersInGroup) {
+    public Group(String groupName, String groupDescription, String game, int numberOfUsers, ArrayList<User> usersInGroup) {
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.game = game;
@@ -56,11 +56,11 @@ public class Group {
         return this;
     }
 
-    public ArrayList<String> getUsersInGroup() {
+    public ArrayList<User> getUsersInGroup() {
         return usersInGroup;
     }
 
-    public Group setUsersInGroup(ArrayList<String> usersInGroup) {
+    public Group setUsersInGroup(ArrayList<User> usersInGroup) {
         this.usersInGroup = usersInGroup;
         return this;
     }
