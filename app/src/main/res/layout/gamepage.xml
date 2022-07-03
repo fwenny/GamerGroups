@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/ll_gameInfo"
+        layout="@layout/gameselection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true" />
+
+    <ListView
+        android:id="@+id/lstGroupList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnCreate"
+        android:layout_below="@+id/ll_gameInfo"></ListView>
+
+    <Button
+        android:id="@+id/btnCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnBack"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Create group"></Button>
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Back"></Button>
+</RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/ll_gameInfo"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_alignParentTop="true"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:layout_centerInParent="true">-->
+
+    <!--        <ImageView-->
+    <!--            android:id="@+id/icon"-->
+    <!--            android:layout_width="60dp"-->
+    <!--            android:layout_height="60dp"-->
+    <!--            android:padding="5dp" />-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/title"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginLeft="10dp"-->
+    <!--                android:layout_marginTop="5dp"-->
+    <!--                android:padding="2dp"-->
+    <!--                android:text="Medium Text"-->
+    <!--                android:textAppearance="?android:attr/textAppearanceMedium"-->
+    <!--                android:textColor="#4d4d4d"-->
+    <!--                android:textStyle="bold" />-->
+    <!--        </LinearLayout>-->
+    <!--    </LinearLayout>-->

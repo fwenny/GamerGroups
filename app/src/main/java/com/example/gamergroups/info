@@ -1,0 +1,14 @@
+User:
+email - identifer
+[Group]s user belongs to
+
+Game:
+game name - identifer
+[Group]s existing in the game
+
+Group:
+group name - identifer
+group description
+[Game] which group belongs to
+number of users
+[User]s list
