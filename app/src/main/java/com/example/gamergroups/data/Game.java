@@ -1,7 +1,8 @@
-package com.example.gamergroups;
+package com.example.gamergroups.data;
 
 import java.util.ArrayList;
 
+// holds game info
 public class Game {
     private String gameName;
     private ArrayList<Group> gameGroups;

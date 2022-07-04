@@ -1,4 +1,4 @@
-package com.example.gamergroups;
+package com.example.gamergroups.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -8,10 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.gamergroups.R;
+import com.example.gamergroups.data.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+// used to display users in a ListView
 public class UsersAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
@@ -53,5 +56,14 @@ public class UsersAdapter extends ArrayAdapter<String> {
         imageView.setTag(userIcons.get(position));
 
         return rowView;
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+
+        this.userNames.clear();
+        this.userIcons.clear();
+        this.userEmails.clear();
     }
 }

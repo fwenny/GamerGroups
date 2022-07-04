@@ -1,8 +1,9 @@
-package com.example.gamergroups;
+package com.example.gamergroups.helper;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
+// interface to help with callbacks
 public interface OnGetDataListener {
     void onStart();
 

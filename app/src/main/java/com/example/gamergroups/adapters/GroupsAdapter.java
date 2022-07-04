@@ -1,4 +1,4 @@
-package com.example.gamergroups;
+package com.example.gamergroups.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -8,8 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.gamergroups.data.Group;
+import com.example.gamergroups.R;
+import com.example.gamergroups.helper.DatabaseManager;
+
 import java.util.ArrayList;
 
+// used to display groups in a ListView
 public class GroupsAdapter extends ArrayAdapter<String> {
 
     private Activity context;
@@ -32,7 +37,7 @@ public class GroupsAdapter extends ArrayAdapter<String> {
         this.groupName.add(grp.getGroupName());
         this.groupDescription.add(grp.getGroupDescription());
         this.numberOfUsers.add(String.valueOf(grp.getNumberOfUsers()));
-        this.isInGroup.add(true);
+        this.isInGroup.add(grp.isUserInGroup(DatabaseManager.Instance.CurrentUser));
     }
 
     public View getView(int position, View view, ViewGroup parent) {
@@ -50,5 +55,15 @@ public class GroupsAdapter extends ArrayAdapter<String> {
         ivIsInGroup.setVisibility(isInGroup.get(position) ? View.VISIBLE : View.INVISIBLE);
 
         return rowView;
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+
+        this.groupName.clear();
+        this.groupDescription.clear();
+        this.numberOfUsers.clear();
+        this.isInGroup.clear();
     }
 }

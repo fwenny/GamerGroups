@@ -1,4 +1,4 @@
-package com.example.gamergroups;
+package com.example.gamergroups.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,10 +9,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gamergroups.R;
+import com.example.gamergroups.data.User;
+import com.example.gamergroups.helper.Consts;
+import com.example.gamergroups.helper.DatabaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+// used to sign a new user
 public class SignupActivity extends AppCompatActivity {
     private EditText et_displayName;
     private EditText et_email;
@@ -50,6 +55,7 @@ public class SignupActivity extends AppCompatActivity {
             String email = et_email.getText().toString();
             String password = et_password.getText().toString();
 
+            // create new user
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
@@ -57,6 +63,7 @@ public class SignupActivity extends AppCompatActivity {
                             Log.d(Consts.LOGCAT_TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
+                            // if user successfully signed up, update the display name and save for future use
                             if (user != null) {
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(displayName)

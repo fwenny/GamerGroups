@@ -1,4 +1,4 @@
-package com.example.gamergroups;
+package com.example.gamergroups.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +16,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gamergroups.helper.Consts;
+import com.example.gamergroups.helper.DatabaseManager;
+import com.example.gamergroups.R;
+import com.example.gamergroups.data.User;
 import com.google.firebase.auth.FirebaseAuth;
 
+// used to handle logging in
 public class LoginActivity extends AppCompatActivity {
     private EditText et_email;
     private EditText et_password;
@@ -36,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
         getUIIDs();
 
+        // create a clickable textview in case the user needs to register first
         String text = "Sign up!";
         SpannableString ss = new SpannableString(text);
         ClickableSpan cs = new ClickableSpan() {
@@ -62,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         tv_ClickToRegister = findViewById(R.id.tv_clickToRegister);
     }
 
+    // used to login the user with given email and password
     private void loginUser(String email, String password) {
         fb_auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
@@ -69,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(Consts.LOGCAT_TAG, "signInWithEmail:success");
 
+                        // save current user info for future use
                         DatabaseManager.Instance.CurrentUser = new User(email, fb_auth.getCurrentUser().getDisplayName(),
                                 fb_auth.getCurrentUser().getPhotoUrl().toString());
                         finish();

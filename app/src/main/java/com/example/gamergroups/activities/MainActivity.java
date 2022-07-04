@@ -1,4 +1,4 @@
-package com.example.gamergroups;
+package com.example.gamergroups.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gamergroups.R;
+import com.example.gamergroups.adapters.GamesAdapter;
+import com.example.gamergroups.data.User;
+import com.example.gamergroups.helper.DatabaseManager;
+import com.example.gamergroups.helper.OnGetDataListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -16,48 +21,29 @@ import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 
+// main class, handles showing all of the games
 public class MainActivity extends AppCompatActivity {
     private Button btn_login;
     private ListView lst_gameList;
     private GamesAdapter adapter;
     private FirebaseAuth fb_auth;
 
-    ArrayList<String> maintitle = new ArrayList<String>() {
-        {
-            add("Astroneer");
-            add("Bloons TD");
-            add("Duck Hunt");
-            add("Idle Game");
-            add("My life in Portia");
-            add("Skull Hunters");
-            add("VRChat");
-        }
-    };
-
-    ArrayList<String> imgid = new ArrayList<String>() {
-        {
-            add("https://i.imgur.com/haOd2Xb.png");
-            add("https://i.imgur.com/GMH14pc.png");
-            add("https://i.imgur.com/fvG8XKp.png");
-            add("https://i.imgur.com/wIlaCv7.png");
-            add("https://i.imgur.com/YVooqCg.png");
-            add("https://i.imgur.com/7XP2dNs.png");
-            add("https://i.imgur.com/KsvScaB.png");
-        }
-    };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainpage);
 
+        // get current user if they are logged in and save for future use
         fb_auth = FirebaseAuth.getInstance();
         FirebaseUser fb_user = fb_auth.getCurrentUser();
-        DatabaseManager.Instance.CurrentUser = new User(fb_user.getEmail(), fb_user.getDisplayName(),
-                fb_user.getPhotoUrl().toString());
+
+        if (fb_user != null)
+            DatabaseManager.Instance.CurrentUser = new User(fb_user.getEmail(), fb_user.getDisplayName(),
+                    fb_user.getPhotoUrl().toString());
 
         getUIIDs();
+
+        // fill the game list
         initDatabase();
 
         adapter = new GamesAdapter(this, new ArrayList<>(), new ArrayList<>());
@@ -70,17 +56,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (fb_auth.getCurrentUser() != null)
-            btn_login.setText("Log out");
-        else
-            btn_login.setText("Login");
+        updateLoginBtnText();
     }
 
     private void initDatabase() {
-//        for (int i = 0; i < maintitle.size(); i++) {
-//            saveGameToDB(maintitle.get(i), new ArrayList<>(), imgid.get(i));
-//        }
-
+        // custom callback listener to update adapter once the game list is received from the DB
         OnGetDataListener gameListener = new OnGetDataListener() {
             @Override
             public void onStart() {
@@ -89,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(DataSnapshot data) {
+                // update adapter with game list
                 for (int i = 0; i < DatabaseManager.Instance.games.size(); i++) {
                     adapter.addNew(DatabaseManager.Instance.games.get(i));
                 }
@@ -101,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        // get game list from DB
         DatabaseManager.Instance.initGameList(gameListener);
     }
 
@@ -111,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
+        // choose selected game and pass it onto the next activity
         lst_gameList.setOnItemClickListener((parent, view, position, id) -> {
             String gameTitle = ((TextView) view.findViewById(R.id.tv_title)).getText().toString();
             String iconURL = (String) ((ImageView) view.findViewById(R.id.iv_icon)).getTag();
@@ -130,6 +113,15 @@ public class MainActivity extends AppCompatActivity {
                 Intent switchToLogin = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(switchToLogin);
             }
+
+            updateLoginBtnText();
         });
+    }
+
+    private void updateLoginBtnText(){
+        if (fb_auth.getCurrentUser() != null)
+            btn_login.setText("Log out");
+        else
+            btn_login.setText("Login");
     }
 }

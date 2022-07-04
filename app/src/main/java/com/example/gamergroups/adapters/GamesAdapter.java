@@ -1,4 +1,4 @@
-package com.example.gamergroups;
+package com.example.gamergroups.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -8,10 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.gamergroups.data.Game;
+import com.example.gamergroups.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+// used to display games in a ListView
 public class GamesAdapter extends ArrayAdapter<String> {
 
     private final Activity context;
@@ -44,5 +47,13 @@ public class GamesAdapter extends ArrayAdapter<String> {
         imageView.setTag(iconURL.get(position));
 
         return rowView;
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+
+        this.maintitle.clear();
+        this.iconURL.clear();
     }
 }

@@ -1,7 +1,8 @@
-package com.example.gamergroups;
+package com.example.gamergroups.data;
 
 import java.util.ArrayList;
 
+// holds group info
 public class Group {
     private String groupName;
     private String groupDescription;
@@ -68,17 +69,28 @@ public class Group {
         return this;
     }
 
+    // remove user from group
     public void removeUser(User u) {
-
+        // remove user by email
         this.usersInGroup.removeIf(user -> user.getEmail().equals(u.getEmail()));
         this.setNumberOfUsers(this.usersInGroup.size());
     }
 
+    // add user to group
     public void addUser(User u) {
+        // check email to make sure user doesn't already exist
         if (this.usersInGroup.stream().noneMatch(user -> user.getEmail().equals(u.getEmail()))) {
             this.usersInGroup.add(u);
         }
 
         this.setNumberOfUsers(this.usersInGroup.size());
+    }
+
+    public boolean isUserInGroup(User u){
+        if (u != null){
+            return this.getUsersInGroup().stream().anyMatch(user -> user.getEmail().equals(u.getEmail()));
+        }
+
+        return false;
     }
 }

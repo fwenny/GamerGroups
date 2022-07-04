@@ -1,5 +1,6 @@
-package com.example.gamergroups;
+package com.example.gamergroups.data;
 
+// holds user info
 public class User {
     private String email;
     private String displayName;
