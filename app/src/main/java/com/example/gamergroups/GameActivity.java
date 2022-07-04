@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -28,6 +27,7 @@ public class GameActivity extends AppCompatActivity {
     private Button btn_create;
     private ListView lst_groupList;
     private GroupsAdapter adapter;
+    private Intent intent;
 
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -41,14 +41,13 @@ public class GameActivity extends AppCompatActivity {
 
                         Group grp = new Group(groupName, groupDesc, tv_title.getText().toString(), 1,
                                 new ArrayList<User>() {{
-                                    add(DAOManager.daoUser.CurrentUser);
+                                    add(DatabaseManager.Instance.CurrentUser);
                                 }});
 
-                        Game g = DAOManager.daoGame.getGameData(tv_title.getText().toString());
+                        Game g = DatabaseManager.Instance.getGameData(tv_title.getText().toString());
                         g.getGameGroups().add(grp);
-                        DAOManager.daoGame.add(g);
+                        DatabaseManager.Instance.addGame(g);
 
-                        saveGroupToDB(grp);
                         adapter.addNew(grp);
                         adapter.notifyDataSetChanged();
                     }
@@ -60,17 +59,18 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.gamepage);
 
         getUIIDs();
+        intent = getIntent();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null)
             btn_create.setVisibility(View.GONE);
         else
             btn_create.setVisibility(View.VISIBLE);
 
-        tv_title.setText(getIntent().getStringExtra("gameTitle"));
-        Picasso.get().load(getIntent().getStringExtra("icon")).into(iv_icon);
+        tv_title.setText(intent.getStringExtra("gameTitle"));
+        Picasso.get().load(intent.getStringExtra("icon")).into(iv_icon);
         adapter = new GroupsAdapter(this, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        Game g = DAOManager.daoGame.getGameData(tv_title.getText().toString());
+        Game g = DatabaseManager.Instance.getGameData(tv_title.getText().toString());
 
         for (Group CurrGroup : g.getGameGroups()) {
             adapter.addNew(CurrGroup);
@@ -79,11 +79,6 @@ public class GameActivity extends AppCompatActivity {
         lst_groupList.setAdapter(adapter);
 
         setListeners();
-    }
-
-
-    private void saveGroupToDB(Group grp) {
-        DAOManager.daoGroup.add(grp);
     }
 
     private void getUIIDs() {
@@ -95,38 +90,28 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
+        btn_back.setOnClickListener(view -> finish());
+
+        lst_groupList.setOnItemClickListener((parent, view, position, id) -> {
+            TextView tvGroupName = (TextView) view.findViewById(R.id.tv_groupName);
+            TextView tvGroupDescription = (TextView) view.findViewById(R.id.tv_groupDescription);
+            TextView tvNumberOfUsers = (TextView) view.findViewById(R.id.tv_numberOfUsers);
+            ImageView ivIsInGroup = (ImageView) view.findViewById(R.id.iv_inGroup);
+
+            Intent switchToGroup = new Intent(GameActivity.this, GroupActivity.class);
+            switchToGroup.putExtra("groupName", tvGroupName.getText().toString());
+            switchToGroup.putExtra("groupDesc", tvGroupDescription.getText().toString());
+            switchToGroup.putExtra("numOfUsers", tvNumberOfUsers.getText().toString());
+            switchToGroup.putExtra("isInGroup", ivIsInGroup.getVisibility() == View.VISIBLE);
+            switchToGroup.putExtra("groupPos", position);
+            switchToGroup.putExtra("gameName", tv_title.getText().toString());
+
+            startActivity(switchToGroup);
         });
 
-        lst_groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView tvGroupName = (TextView) view.findViewById(R.id.tv_groupName);
-                TextView tvGroupDescription = (TextView) view.findViewById(R.id.tv_groupDescription);
-                TextView tvNumberOfUsers = (TextView) view.findViewById(R.id.tv_numberOfUsers);
-                ImageView ivIsInGroup = (ImageView) view.findViewById(R.id.iv_inGroup);
-
-                Intent switchToGroup = new Intent(GameActivity.this, GroupActivity.class);
-                switchToGroup.putExtra("groupName", tvGroupName.getText().toString());
-                switchToGroup.putExtra("groupDesc", tvGroupDescription.getText().toString());
-                switchToGroup.putExtra("numOfUsers", tvNumberOfUsers.getText().toString());
-                switchToGroup.putExtra("isInGroup", ivIsInGroup.getVisibility() == View.VISIBLE ? true : false);
-
-                startActivity(switchToGroup);
-            }
-        });
-
-        btn_create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent createGroupIntent = new Intent(GameActivity.this, CreateGroupActivity.class);
-                someActivityResultLauncher.launch(createGroupIntent);
-            }
+        btn_create.setOnClickListener(view -> {
+            Intent createGroupIntent = new Intent(GameActivity.this, CreateGroupActivity.class);
+            someActivityResultLauncher.launch(createGroupIntent);
         });
     }
 }

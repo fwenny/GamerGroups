@@ -18,7 +18,7 @@
         android:id="@+id/et_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/tv_password"
+        android:layout_toEndOf="@+id/tv_password"
         android:ems="10"
         android:inputType="textEmailAddress"
         android:textSize="20sp" />
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_email"
-        android:layout_toRightOf="@+id/tv_password"
+        android:layout_toEndOf="@+id/tv_password"
         android:ems="10"
         android:inputType="textPassword"
         android:textSize="20sp" />
@@ -66,9 +66,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_back"
         android:layout_marginTop="20sp"
-        android:layout_toRightOf="@+id/tv_alreadySignedUp"
+        android:layout_toEndOf="@+id/tv_alreadySignedUp"
         android:text="Sign up!"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:textSize="25sp" />
 
     <Button

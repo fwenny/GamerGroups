@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_joinGroup"
-        android:layout_below="@+id/ll_groupInfo"></ListView>
+        android:layout_below="@+id/ll_groupInfo"/>
 
     <Button
         android:id="@+id/btn_joinGroup"
@@ -26,7 +26,7 @@
         android:layout_above="@+id/btn_back"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="Join group"></Button>
+        android:text="Join group"/>
 
     <Button
         android:id="@+id/btn_back"
@@ -35,5 +35,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="Back"></Button>
+        android:text="Back"/>
 </RelativeLayout>

@@ -18,8 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-
 public class LoginActivity extends AppCompatActivity {
     private EditText et_email;
     private EditText et_password;
@@ -71,8 +69,8 @@ public class LoginActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(Consts.LOGCAT_TAG, "signInWithEmail:success");
 
-                        DAOManager.daoUser.CurrentUser = new User(email, fb_auth.getCurrentUser().getDisplayName(),
-                                fb_auth.getCurrentUser().getPhotoUrl().toString(), new ArrayList<>());
+                        DatabaseManager.Instance.CurrentUser = new User(email, fb_auth.getCurrentUser().getDisplayName(),
+                                fb_auth.getCurrentUser().getPhotoUrl().toString());
                         finish();
                     } else {
                         // If sign in fails, display a message to the user.
@@ -88,9 +86,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        btn_back.setOnClickListener(view -> {
-            finish();
-        });
+        btn_back.setOnClickListener(view -> finish());
 
         btn_Login.setOnClickListener(view -> {
             String email = et_email.getText().toString();

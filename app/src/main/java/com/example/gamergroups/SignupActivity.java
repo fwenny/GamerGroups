@@ -7,17 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-
-import java.util.ArrayList;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText et_displayName;
@@ -46,19 +40,8 @@ public class SignupActivity extends AppCompatActivity {
         et_icon = findViewById(R.id.et_icon);
     }
 
-    private void saveUserToDB(String email, String displayName, String iconURL, ArrayList<Integer> groups) {
-        User usr = new User(email, displayName, iconURL, groups);
-        saveUserToDB(usr);
-    }
-
-    private void saveUserToDB(User usr) {
-        DAOManager.daoUser.add(usr);
-    }
-
     private void setListeners() {
-        btn_back.setOnClickListener(view -> {
-            finish();
-        });
+        btn_back.setOnClickListener(view -> finish());
 
         btn_signUp.setOnClickListener(view -> {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -68,36 +51,33 @@ public class SignupActivity extends AppCompatActivity {
             String password = et_password.getText().toString();
 
             mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(Consts.LOGCAT_TAG, "createUserWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(Consts.LOGCAT_TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
 
-                                if (user != null) {
-                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                            .setDisplayName(displayName)
-                                            .setPhotoUri(Uri.parse(et_icon.getText().toString()))
-                                            .build();
+                            if (user != null) {
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(displayName)
+                                        .setPhotoUri(Uri.parse(et_icon.getText().toString()))
+                                        .build();
 
-                                    user.updateProfile(profileUpdates);
+                                user.updateProfile(profileUpdates);
 
-                                    DAOManager.daoUser.CurrentUser = new User(email, displayName, et_icon.getText().toString(), new ArrayList<>());
+                                DatabaseManager.Instance.CurrentUser = new User(email, displayName, et_icon.getText().toString());
 
-                                    finish();
-                                }
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(Consts.LOGCAT_TAG, "createUserWithEmail:failure", task.getException());
-
-                                String msg = "";
-                                if (task.getException() != null)
-                                    msg = task.getException().getMessage();
-
-                                Toast.makeText(SignupActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                finish();
                             }
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(Consts.LOGCAT_TAG, "createUserWithEmail:failure", task.getException());
+
+                            String msg = "";
+                            if (task.getException() != null)
+                                msg = task.getException().getMessage();
+
+                            Toast.makeText(SignupActivity.this, msg, Toast.LENGTH_SHORT).show();
                         }
                     });
         });

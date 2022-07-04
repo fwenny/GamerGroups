@@ -1,5 +1,6 @@
 package com.example.gamergroups;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class GroupActivity extends AppCompatActivity {
     private TextView tv_groupName;
     private TextView tv_groupDescription;
@@ -17,6 +20,10 @@ public class GroupActivity extends AppCompatActivity {
     private ListView lst_userList;
     private Button btn_joinGroup;
     private Button btn_back;
+    private UsersAdapter adapter;
+    private boolean isInGroup;
+    private int groupPos;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +32,31 @@ public class GroupActivity extends AppCompatActivity {
 
         getUIIDs();
 
-        tv_groupName.setText(getIntent().getStringExtra("groupName"));
-        tv_groupDescription.setText(getIntent().getStringExtra("groupDesc"));
-        tv_numOfUsers.setText(getIntent().getStringExtra("numOfUsers"));
+        intent = getIntent();
+        tv_groupName.setText(intent.getStringExtra("groupName"));
+        tv_groupDescription.setText(intent.getStringExtra("groupDesc"));
+        tv_numOfUsers.setText(intent.getStringExtra("numOfUsers"));
         iv_isInGroup.setImageResource(R.drawable.dr_correct);
+        isInGroup = intent.getBooleanExtra("isInGroup", false);
 
-        if (getIntent().getBooleanExtra("isInGroup", false)) {
+        if (isInGroup) {
             iv_isInGroup.setVisibility(View.VISIBLE);
-        } else
+            btn_joinGroup.setText("Leave group");
+        } else {
             iv_isInGroup.setVisibility(View.INVISIBLE);
+            btn_joinGroup.setText("Join group");
+        }
+
+        adapter = new UsersAdapter(this, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+
+        groupPos = intent.getIntExtra("groupPos", 0);
+        Game g = DatabaseManager.Instance.getGameData(intent.getStringExtra("gameName"));
+
+        for (User CurrUser : g.getGameGroups().get(groupPos).getUsersInGroup()) {
+            adapter.addNew(CurrUser);
+        }
+
+        lst_userList.setAdapter(adapter);
 
         setListeners();
     }
@@ -49,11 +72,29 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
+        btn_back.setOnClickListener(view -> finish());
+
+        btn_joinGroup.setOnClickListener(view -> {
+            isInGroup = !isInGroup;
+            Game g = DatabaseManager.Instance.getGameData(intent.getStringExtra("gameName"));
+
+            if (isInGroup) {
+                g.getGameGroups().get(groupPos).addUser(DatabaseManager.Instance.CurrentUser);
+                adapter.addNew(DatabaseManager.Instance.CurrentUser);
+
+                iv_isInGroup.setVisibility(View.VISIBLE);
+                btn_joinGroup.setText("Leave group");
+            } else {
+                g.getGameGroups().get(groupPos).removeUser(DatabaseManager.Instance.CurrentUser);
+                adapter.remove(DatabaseManager.Instance.CurrentUser.getEmail());
+
+                iv_isInGroup.setVisibility(View.INVISIBLE);
+                btn_joinGroup.setText("Join group");
             }
+
+            tv_numOfUsers.setText(String.valueOf(g.getGameGroups().get(groupPos).getNumberOfUsers()));
+            DatabaseManager.Instance.addGame(g);
+            adapter.notifyDataSetChanged();
         });
     }
 }

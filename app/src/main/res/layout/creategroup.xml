@@ -18,7 +18,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="20sp"
-        android:layout_toRightOf="@+id/tv_groupDescription"
+        android:layout_toEndOf="@+id/tv_groupDescription"
 
         />
 
@@ -37,7 +37,7 @@
         android:ems="10"
         android:inputType="textEmailAddress"
         android:textSize="20sp"
-        android:layout_toRightOf="@+id/tv_groupDescription"
+        android:layout_toEndOf="@+id/tv_groupDescription"
         android:layout_below="@+id/et_groupName"
         />
 

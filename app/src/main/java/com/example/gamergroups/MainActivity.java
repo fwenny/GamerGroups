@@ -17,8 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnLogin;
-    private ListView list;
+    private Button btn_login;
+    private ListView lst_gameList;
     private GamesAdapter adapter;
     private FirebaseAuth fb_auth;
 
@@ -54,15 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
         fb_auth = FirebaseAuth.getInstance();
         FirebaseUser fb_user = fb_auth.getCurrentUser();
-        DAOManager.daoUser.CurrentUser = new User(fb_user.getEmail(), fb_user.getDisplayName(),
-                fb_user.getPhotoUrl().toString(), new ArrayList<>());
+        DatabaseManager.Instance.CurrentUser = new User(fb_user.getEmail(), fb_user.getDisplayName(),
+                fb_user.getPhotoUrl().toString());
 
         getUIIDs();
         initDatabase();
 
         adapter = new GamesAdapter(this, new ArrayList<>(), new ArrayList<>());
-        list = (ListView) findViewById(R.id.lstGameList);
-        list.setAdapter(adapter);
+        lst_gameList.setAdapter(adapter);
 
         setListeners();
     }
@@ -72,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (fb_auth.getCurrentUser() != null)
-            btnLogin.setText("Log out");
+            btn_login.setText("Log out");
         else
-            btnLogin.setText("Login");
+            btn_login.setText("Login");
     }
 
     private void initDatabase() {
@@ -90,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(DataSnapshot data) {
-                for (int i = 0; i < DAOManager.daoGame.games.size(); i++) {
-                    adapter.addNew(DAOManager.daoGame.games.get(i));
+                for (int i = 0; i < DatabaseManager.Instance.games.size(); i++) {
+                    adapter.addNew(DatabaseManager.Instance.games.get(i));
                 }
 
                 adapter.notifyDataSetChanged();
@@ -102,15 +101,17 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        DAOManager.daoGame.init(gameListener);
+        DatabaseManager.Instance.initGameList(gameListener);
     }
 
     private void getUIIDs() {
-        btnLogin = findViewById(R.id.btnLogin);
+
+        btn_login = findViewById(R.id.btn_login);
+        lst_gameList = findViewById(R.id.lst_gameList);
     }
 
     private void setListeners() {
-        list.setOnItemClickListener((parent, view, position, id) -> {
+        lst_gameList.setOnItemClickListener((parent, view, position, id) -> {
             String gameTitle = ((TextView) view.findViewById(R.id.tv_title)).getText().toString();
             String iconURL = (String) ((ImageView) view.findViewById(R.id.iv_icon)).getTag();
             Intent switchToGame = new Intent(MainActivity.this, GameActivity.class);
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        btnLogin.setOnClickListener(view ->
+        btn_login.setOnClickListener(view ->
         {
             if (fb_auth.getCurrentUser() != null) {
                 fb_auth.signOut();

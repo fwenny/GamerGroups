@@ -42,6 +42,11 @@ public class Group {
         return numberOfUsers;
     }
 
+    public Group setNumberOfUsers(int numberOfUsers) {
+        this.numberOfUsers = numberOfUsers;
+        return this;
+    }
+
     public String getGame() {
         return game;
     }
@@ -51,17 +56,29 @@ public class Group {
         return this;
     }
 
-    public Group setNumberOfUsers(int numberOfUsers) {
-        this.numberOfUsers = numberOfUsers;
-        return this;
-    }
-
     public ArrayList<User> getUsersInGroup() {
+        if (usersInGroup == null)
+            usersInGroup = new ArrayList<>();
+
         return usersInGroup;
     }
 
     public Group setUsersInGroup(ArrayList<User> usersInGroup) {
         this.usersInGroup = usersInGroup;
         return this;
+    }
+
+    public void removeUser(User u) {
+
+        this.usersInGroup.removeIf(user -> user.getEmail().equals(u.getEmail()));
+        this.setNumberOfUsers(this.usersInGroup.size());
+    }
+
+    public void addUser(User u) {
+        if (this.usersInGroup.stream().noneMatch(user -> user.getEmail().equals(u.getEmail()))) {
+            this.usersInGroup.add(u);
+        }
+
+        this.setNumberOfUsers(this.usersInGroup.size());
     }
 }

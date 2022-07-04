@@ -10,15 +10,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class DAOGame {
+public class DatabaseManager {
     private DatabaseReference dbRef;
     public ArrayList<Game> games;
+    public User CurrentUser;
 
-    public DAOGame() {
-        dbRef = FirebaseDatabase.getInstance("https://gamergroupsproject-default-rtdb.europe-west1.firebasedatabase.app").getReference(Game.class.getSimpleName());
+    public static final DatabaseManager Instance = new DatabaseManager();
+
+    public DatabaseManager() {
+        dbRef = FirebaseDatabase.getInstance(Consts.DB_REGION_STRING).getReference(Game.class.getSimpleName());
     }
 
-    public void add(Game game) {
+    public void addGame(Game game) {
         Query queryToGetData = dbRef.child(game.getGameName());
 
         queryToGetData.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -34,7 +37,7 @@ public class DAOGame {
         });
     }
 
-    public void init(OnGetDataListener listener) {
+    public void initGameList(OnGetDataListener listener) {
         if (games == null)
             games = new ArrayList<>();
 
