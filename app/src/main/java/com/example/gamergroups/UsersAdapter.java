@@ -37,7 +37,7 @@ public class UsersAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.gameselection, null, true);
 
         TextView titleText = (TextView) rowView.findViewById(R.id.userName);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.iv_icon);
 
         titleText.setText(userNames.get(position));
         Picasso.get().load(userIcons.get(position)).into(imageView);

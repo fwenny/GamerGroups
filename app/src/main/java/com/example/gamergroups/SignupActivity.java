@@ -34,7 +34,28 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.signup);
 
         getUIIDs();
+        setListeners();
+    }
 
+    private void getUIIDs() {
+        et_displayName = findViewById(R.id.et_displayName);
+        et_email = findViewById(R.id.et_email);
+        et_password = findViewById(R.id.et_password);
+        btn_signUp = findViewById(R.id.btn_signUp);
+        btn_back = findViewById(R.id.btn_back);
+        et_icon = findViewById(R.id.et_icon);
+    }
+
+    private void saveUserToDB(String email, String displayName, String iconURL, ArrayList<Integer> groups) {
+        User usr = new User(email, displayName, iconURL, groups);
+        saveUserToDB(usr);
+    }
+
+    private void saveUserToDB(User usr) {
+        DAOManager.daoUser.add(usr);
+    }
+
+    private void setListeners() {
         btn_back.setOnClickListener(view -> {
             finish();
         });
@@ -79,26 +100,6 @@ public class SignupActivity extends AppCompatActivity {
                             }
                         }
                     });
-
-            User user = new User(email, displayName, "", new ArrayList<>());
         });
-    }
-
-    private void getUIIDs() {
-        et_displayName = findViewById(R.id.et_displayName);
-        et_email = findViewById(R.id.et_email);
-        et_password = findViewById(R.id.et_password);
-        btn_signUp = findViewById(R.id.btn_signUp);
-        btn_back = findViewById(R.id.btn_back);
-        et_icon = findViewById(R.id.et_icon);
-    }
-
-    private void saveUserToDB(String email, String displayName, String iconURL, ArrayList<Integer> groups) {
-        User usr = new User(email, displayName, iconURL, groups);
-        saveUserToDB(usr);
-    }
-
-    private void saveUserToDB(User usr) {
-        DAOManager.daoUser.add(usr);
     }
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_groupName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group name:"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_groupName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textSize="20sp"
+        android:layout_toRightOf="@+id/tv_groupDescription"
+
+        />
+
+    <TextView
+        android:id="@+id/tv_groupDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group description:"
+        android:textSize="20sp"
+        android:layout_below="@+id/et_groupName" />
+
+    <EditText
+        android:id="@+id/et_groupDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:textSize="20sp"
+        android:layout_toRightOf="@+id/tv_groupDescription"
+        android:layout_below="@+id/et_groupName"
+        />
+
+    <Button
+        android:id="@+id/btn_createGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_groupDescription"
+        android:layout_centerInParent="true"
+        android:text="Create group" />
+</RelativeLayout>

@@ -26,6 +26,10 @@ public class Game {
     }
 
     public ArrayList<Group> getGameGroups() {
+
+        if (gameGroups == null)
+            gameGroups = new ArrayList<>();
+
         return gameGroups;
     }
 

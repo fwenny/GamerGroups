@@ -13,23 +13,23 @@
         android:layout_centerInParent="true" />
 
     <ListView
-        android:id="@+id/lstGroupList"
+        android:id="@+id/lst_userList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnJoin"
+        android:layout_above="@+id/btn_joinGroup"
         android:layout_below="@+id/ll_groupInfo"></ListView>
 
     <Button
-        android:id="@+id/btnJoin"
+        android:id="@+id/btn_joinGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnBack"
+        android:layout_above="@+id/btn_back"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="Join group"></Button>
 
     <Button
-        android:id="@+id/btnBack"
+        android:id="@+id/btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

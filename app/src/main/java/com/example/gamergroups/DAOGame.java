@@ -24,9 +24,7 @@ public class DAOGame {
         queryToGetData.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    dbRef.child(game.getGameName()).setValue(game);
-                }
+                dbRef.child(game.getGameName()).setValue(game);
             }
 
             @Override

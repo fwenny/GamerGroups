@@ -2,28 +2,25 @@ package com.example.gamergroups;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
     private Button btnLogin;
     private ListView list;
     private GamesAdapter adapter;
+    private FirebaseAuth fb_auth;
 
     ArrayList<String> maintitle = new ArrayList<String>() {
         {
@@ -37,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    ArrayList<String> imgid  = new ArrayList<String>() {
+    ArrayList<String> imgid = new ArrayList<String>() {
         {
             add("https://i.imgur.com/haOd2Xb.png");
             add("https://i.imgur.com/GMH14pc.png");
@@ -55,17 +52,67 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainpage);
 
-        mAuth = FirebaseAuth.getInstance();
+        fb_auth = FirebaseAuth.getInstance();
+        FirebaseUser fb_user = fb_auth.getCurrentUser();
+        DAOManager.daoUser.CurrentUser = new User(fb_user.getEmail(), fb_user.getDisplayName(),
+                fb_user.getPhotoUrl().toString(), new ArrayList<>());
 
         getUIIDs();
         initDatabase();
+
         adapter = new GamesAdapter(this, new ArrayList<>(), new ArrayList<>());
         list = (ListView) findViewById(R.id.lstGameList);
         list.setAdapter(adapter);
 
+        setListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (fb_auth.getCurrentUser() != null)
+            btnLogin.setText("Log out");
+        else
+            btnLogin.setText("Login");
+    }
+
+    private void initDatabase() {
+//        for (int i = 0; i < maintitle.size(); i++) {
+//            saveGameToDB(maintitle.get(i), new ArrayList<>(), imgid.get(i));
+//        }
+
+        OnGetDataListener gameListener = new OnGetDataListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onSuccess(DataSnapshot data) {
+                for (int i = 0; i < DAOManager.daoGame.games.size(); i++) {
+                    adapter.addNew(DAOManager.daoGame.games.get(i));
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+            }
+        };
+
+        DAOManager.daoGame.init(gameListener);
+    }
+
+    private void getUIIDs() {
+        btnLogin = findViewById(R.id.btnLogin);
+    }
+
+    private void setListeners() {
         list.setOnItemClickListener((parent, view, position, id) -> {
-            String gameTitle = ((TextView) view.findViewById(R.id.title)).getText().toString();
-            String iconURL = (String) ((ImageView) view.findViewById(R.id.icon)).getTag();
+            String gameTitle = ((TextView) view.findViewById(R.id.tv_title)).getText().toString();
+            String iconURL = (String) ((ImageView) view.findViewById(R.id.iv_icon)).getTag();
             Intent switchToGame = new Intent(MainActivity.this, GameActivity.class);
             switchToGame.putExtra("gameTitle", gameTitle);
             switchToGame.putExtra("icon", iconURL);
@@ -73,98 +120,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(switchToGame);
         });
 
+
         btnLogin.setOnClickListener(view ->
         {
-            Intent switchToSignup = new Intent(MainActivity.this, SignupActivity.class);
-            startActivity(switchToSignup);
-
+            if (fb_auth.getCurrentUser() != null) {
+                fb_auth.signOut();
+            } else {
+                Intent switchToLogin = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(switchToLogin);
+            }
         });
-    }
-
-    private void initDatabase() {
-        for (int i = 0; i < maintitle.size(); i++) {
-            saveGameToDB(maintitle.get(i), null, imgid.get(i));
-        }
-
-//        OnGetDataListener gameListener = new OnGetDataListener() {
-//            @Override
-//            public void onStart() {
-//
-//            }
-//
-//            @Override
-//            public void onSuccess(DataSnapshot data) {
-//                for (int i = 0; i < DAOManager.daoGame.games.size(); i++) {
-//                    adapter.addNew(DAOManager.daoGame.games.get(i));
-//                }
-//
-//                adapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onFailed(DatabaseError databaseError) {
-//            }
-//        };
-//
-//        DAOManager.daoGame.init(gameListener);
-    }
-
-    private void saveGameToDB(String gameName, ArrayList<Group> gameGroups, String icon) {
-        Game game = new Game(gameName, gameGroups, icon);
-        saveGameToDB(game);
-    }
-
-    private void saveGameToDB(Game game) {
-        DAOManager.daoGame.add(game);
-    }
-
-    private void signUpUser(String displayName, String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(Consts.LOGCAT_TAG, "createUserWithEmail:success");
-
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(displayName)
-                                .build();
-
-                        if (mAuth.getCurrentUser() != null)
-                            mAuth.getCurrentUser().updateProfile(profileUpdates)
-                                    .addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            Log.d(Consts.LOGCAT_TAG, "User profile updated.");
-                                        }
-                                    });
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(Consts.LOGCAT_TAG, "createUserWithEmail:failure", task.getException());
-
-                        String msg = "";
-                        if (task.getException() != null)
-                            msg = task.getException().getMessage();
-
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void loginUser(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(Consts.LOGCAT_TAG, "signInWithEmail:success");
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(Consts.LOGCAT_TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(MainActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void getUIIDs() {
-        btnLogin = findViewById(R.id.btnLogin);
     }
 }

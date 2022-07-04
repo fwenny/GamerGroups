@@ -36,8 +36,8 @@ public class GamesAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.gameselection, null, true);
 
-        TextView titleText = (TextView) rowView.findViewById(R.id.title);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+        TextView titleText = (TextView) rowView.findViewById(R.id.tv_title);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.iv_icon);
 
         titleText.setText(maintitle.get(position));
         Picasso.get().load(iconURL.get(position)).into(imageView);
