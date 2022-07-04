@@ -16,5 +16,6 @@ Adapters to populate ListViews with custom items
 Picasso to download images from the web and load into ImageView
 
 
-Showcase video:
+Showcase video (right click > download if it does not play in browser):
+
 https://user-images.githubusercontent.com/44194453/177215870-585be302-e17f-4a49-b75b-95c94ab1c3fd.mp4
